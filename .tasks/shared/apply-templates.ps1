@@ -3,8 +3,6 @@ $BuildDir = (Get-ProjectTasksEnvironmentProperty BuildDir)
 
 Write-Host "Resolve script templates and generate bin files" -ForegroundColor Yellow
 
-New-Item -Path "$BuildDir\bin\scripts" -ItemType Directory -Force | Out-Null
-
 Get-ChildItem "$BuildDir\scripts" -Filter "*.ps1" -Recurse | ForEach-Object {
     Write-Host "Process script $($_.Name) according to template" -ForegroundColor Cyan
     
