@@ -16,7 +16,7 @@ Get-ChildItem "$BuildDir\scripts" -Filter "*.ps1" | ForEach-Object {
         $WrapperLines = [array]@(
             "@echo off"
             "cd %~dp0"
-            "powershell.exe -ExecutionPolicy Bypass -NoProfile -EncodedCommand $EncodedContent"
+            "powershell.exe -ExecutionPolicy Bypass -NoExit -NoProfile -EncodedCommand $EncodedContent"
         )
 
         [string]::Join("`n", $WrapperLines) | Out-File -FilePath $EncodedFilePath -Encoding ASCII
