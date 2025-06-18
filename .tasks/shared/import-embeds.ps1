@@ -1,8 +1,8 @@
-$BuildDir = (Get-ProjectTasksEnvironmentProperty BuildDir)
+$BuildDebugDir = (Get-ProjectTasksEnvironmentProperty BuildDebugDir)
 
 Write-Host "Scanning for any files marked for embedding during build" -ForegroundColor Yellow
 
-Get-ChildItem $BuildDir -Filter "*.ps1" -Recurse | ForEach-Object {
+Get-ChildItem $BuildDebugDir -Filter "*.ps1" -Recurse | ForEach-Object {
     Write-Host "> Importing embeds for $($_.Name)" -ForegroundColor Cyan
     
     $ResolvedScriptRoot = Split-Path $_.FullName

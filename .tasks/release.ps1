@@ -1,11 +1,11 @@
 . (Join-Path $PSScriptRoot "build.ps1")
 
 $ProjectName = Get-ProjectTasksEnvironmentProperty -Name ProjectName
-$BuildDir = Get-ProjectTasksEnvironmentProperty -Name BuildDebugDir
+$BuildDebugDir = Get-ProjectTasksEnvironmentProperty -Name BuildDebugDir
 $ReleaseDir = Get-ProjectTasksEnvironmentProperty -Name ReleaseDir
 $ResourceDirs = Get-ProjectTasksEnvironmentProperty -Name ResourceDirectories
 
-$ArchivePaths = ($BuildDir, $ResourceDirs) | ForEach-Object {
+$ArchivePaths = ($BuildDebugDir, $ResourceDirs) | ForEach-Object {
     if(-not (Test-Path $_)) {
         Write-Error "Build directory '$_' does not exist. Please run the build task first."
         exit 1
