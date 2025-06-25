@@ -37,12 +37,12 @@ $ResourceDirectories = @(
 )
 
 $global:__ProjectTasksEnvironment += @{
-    BuildDebugDir = Get-ProjectEnvironmentPath "build" "debug"
-    BuildReleaseDir = Get-ProjectEnvironmentPath "build" "release"
+    BuildDebugDir = Get-ProjectEnvironmentPath -Path "build" "debug"
+    BuildReleaseDir = Get-ProjectEnvironmentPath -Path "build" "release"
     
-    BuildDirectories = $BuildDirectories | ForEach-Object { Get-ProjectEnvironmentPath $_ }
-    SourceDirectories = $SourceDirectories | ForEach-Object { Get-ProjectEnvironmentPath $_ }
-    ResourceDirectories = $ResourceDirectories | ForEach-Object { Get-ProjectEnvironmentPath $_ }
+    BuildDirectories = $BuildDirectories | ForEach-Object { Get-ProjectEnvironmentPath -Path $_ }
+    SourceDirectories = $SourceDirectories | ForEach-Object { Get-ProjectEnvironmentPath -Path $_ }
+    ResourceDirectories = $ResourceDirectories | ForEach-Object { Get-ProjectEnvironmentPath -Path $_ }
 }
 
 $global:__ProjectTasksEnvironment += @{
