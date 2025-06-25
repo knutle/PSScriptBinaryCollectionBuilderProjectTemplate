@@ -1,9 +1,9 @@
 $ProjectRoot = (Get-ProjectTasksEnvironmentProperty ProjectRoot)
-$BuildDir = (Get-ProjectTasksEnvironmentProperty BuildDir)
+$BuildDebugDir = (Get-ProjectTasksEnvironmentProperty BuildDebugDir)
 
 Write-Host "Resolve script templates and generate bin files" -ForegroundColor Yellow
 
-Get-ChildItem "$BuildDir\scripts" -Filter "*.ps1" -Recurse | ForEach-Object {
+Get-ChildItem "$BuildDebugDir\scripts" -Filter "*.ps1" -Recurse | ForEach-Object {
     Write-Host "Process script $($_.Name) according to template" -ForegroundColor Cyan
     
     $ResolvedScriptName = Split-Path $_.FullName -Leaf
@@ -31,7 +31,7 @@ Get-ChildItem "$BuildDir\scripts" -Filter "*.ps1" -Recurse | ForEach-Object {
 
             $BinFileName = "$ResolvedScriptName$($TemplateExt)"
 
-            $Output | Out-File -FilePath "$BuildDir\bin\$BinFileName"
+            $Output | Out-File -FilePath "$BuildDebugDir\bin\$BinFileName"
 
             $BinFileCount++
 

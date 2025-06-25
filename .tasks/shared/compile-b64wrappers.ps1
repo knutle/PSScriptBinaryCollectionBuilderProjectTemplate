@@ -1,8 +1,8 @@
-$BuildDir = (Get-ProjectTasksEnvironmentProperty BuildDir)
+$BuildDebugDir = (Get-ProjectTasksEnvironmentProperty BuildDebugDir)
 
 Write-Host "Compile any scripts tagged for base64 embedding" -ForegroundColor Yellow
 
-Get-ChildItem "$BuildDir\scripts" -Filter "*.ps1" | ForEach-Object {
+Get-ChildItem "$BuildDebugDir\scripts" -Filter "*.ps1" | ForEach-Object {
     Write-Host "Collecting script file $($_.Name) for embedding" -ForegroundColor Cyan
 
     $RawScriptContent = Get-Content -Path $_.FullName -Raw
@@ -11,7 +11,7 @@ Get-ChildItem "$BuildDir\scripts" -Filter "*.ps1" | ForEach-Object {
         $EncodedContent = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes(($RawScriptContent -replace "^# BUILD:B64WRAPPER", "`$PSScriptRoot = `"`$(cmd /c echo %cd%)`"")))
         $EncodedFileName = "$($_.BaseName).cmd"
 
-        $EncodedFilePath = "$BuildDir\bin\$EncodedFileName"
+        $EncodedFilePath = "$BuildDebugDir\bin\$EncodedFileName"
         
         $WrapperLines = [array]@(
             "@echo off"
