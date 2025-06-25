@@ -1,16 +1,10 @@
-. $PSScriptRoot/clean.ps1
+. (Join-Path $PSScriptRoot "clean.ps1")
 
 $ProjectRoot = Get-ProjectTasksEnvironmentProperty -Name ProjectRoot
-$BuildDir = Get-ProjectTasksEnvironmentProperty -Name BuildDir
+$BuildDir = Get-ProjectTasksEnvironmentProperty -Name BuildDebugDir
+$SourcePaths = (Get-ProjectTasksEnvironmentProperty -Name SourceDirectories) + (Get-ProjectTasksEnvironmentProperty -Name ResourceDirectories)
 
 Write-Host "Collect relevant source files to process during build" -ForegroundColor Yellow
-
-$SourcePaths = @(
-    "bin\"
-    "src\"
-    "scripts\"
-    "lib\"
-)
 
 $SourcePaths | ForEach-Object {
     $SourcePath = Join-Path $ProjectRoot $_
@@ -25,7 +19,7 @@ $SourcePaths | ForEach-Object {
     Copy-Item -Path $SourcePath -Destination (Join-Path $BuildDir $_) -Recurse
 }
 
-. "$PSScriptRoot\shared\make-autoloader.ps1"
-. "$PSScriptRoot\shared\import-embeds.ps1"
-. "$PSScriptRoot\shared\compile-b64wrappers.ps1"
-. "$PSScriptRoot\shared\apply-templates.ps1"
+. (Join-Path $PSScriptRoot "shared" "make-autoloader.ps1")
+. (Join-Path $PSScriptRoot "shared" "import-embeds.ps1")
+. (Join-Path $PSScriptRoot "shared" "compile-b64wrappers.ps1")
+. (Join-Path $PSScriptRoot "shared" "apply-templates.ps1")
