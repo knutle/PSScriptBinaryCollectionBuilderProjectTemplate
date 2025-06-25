@@ -1,4 +1,3 @@
-$ProjectRoot = (Get-ProjectTasksEnvironmentProperty ProjectRoot)
 $BuildDebugDir = (Get-ProjectTasksEnvironmentProperty BuildDebugDir)
 
 Write-Host "Resolve script templates and generate bin files" -ForegroundColor Yellow
@@ -16,7 +15,7 @@ Get-ChildItem "$BuildDebugDir\scripts" -Filter "*.ps1" -Recurse | ForEach-Object
     if($RawScriptContent -match "^# BUILD:TEMPLATE\((.+)\)") {
         $TemplateRefsCount++
 
-        $RelativeTemplatePath = "$ProjectRoot\src\templates\$($Matches[1]).template"
+        $RelativeTemplatePath = "$BuildDebugDir\templates\$($Matches[1]).template"
         $ResolvedTemplatePath = Resolve-Path $RelativeTemplatePath
 
         if(Test-Path $ResolvedTemplatePath) {
@@ -37,7 +36,7 @@ Get-ChildItem "$BuildDebugDir\scripts" -Filter "*.ps1" -Recurse | ForEach-Object
 
             Write-Host "> Generated bin file $BinFileName from template" -ForegroundColor Green
         } else {
-            Write-Error "Unable to resolve template path from $RelativeTemplatePath"
+            throw "Unable to resolve template path from $RelativeTemplatePath"
         }
     }
 
