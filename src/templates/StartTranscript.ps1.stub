@@ -1,0 +1,4 @@
+$TranscriptFileName = "$([System.IO.Path]::GetFileNameWithoutExtension($PSCommandPath)).log"
+$TranscriptOutputPath = Join-Path $env:TEMP $TranscriptFileName
+
+Start-Transcript "$TranscriptOutputPath"

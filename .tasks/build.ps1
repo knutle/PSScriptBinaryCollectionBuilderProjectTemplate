@@ -18,5 +18,6 @@ $BuildSourcePaths | ForEach-Object {
 
 . (Join-Path $PSScriptRoot "shared" "make-autoloader.ps1")
 . (Join-Path $PSScriptRoot "shared" "import-embeds.ps1")
+. (Join-Path $PSScriptRoot "shared" "resolve-stubs.ps1")
 . (Join-Path $PSScriptRoot "shared" "compile-b64wrappers.ps1")
 . (Join-Path $PSScriptRoot "shared" "apply-templates.ps1")
