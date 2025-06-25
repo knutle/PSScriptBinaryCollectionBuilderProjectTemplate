@@ -1,4 +1,5 @@
 $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+$ProjectName = Split-Path $ProjectRoot -Leaf
 $OutputDir = Join-Path $ProjectRoot "output"
 $BuildDir = Join-Path $OutputDir "build"
 $ReleaseDir = Join-Path $OutputDir "release"
@@ -17,6 +18,7 @@ if(-not (Test-Path $ReleaseDir)) {
 
 $global:__ProjectTasksEnvironment = @{
     ProjectRoot = $ProjectRoot
+    ProjectName = $ProjectName
     OutputDir = $OutputDir
     BuildDir = $BuildDir
     ReleaseDir = $ReleaseDir
@@ -28,7 +30,7 @@ function Get-ProjectTasksEnvironmentProperty {
     
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet("ProjectRoot", "OutputDir", "BuildDir", "ReleaseDir", "IsInitialized")]
+        [ValidateSet("ProjectRoot", "ProjectName", "OutputDir", "BuildDir", "ReleaseDir", "IsInitialized")]
         [string]$Name
     )
 
