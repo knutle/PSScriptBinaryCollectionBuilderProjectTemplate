@@ -1,50 +1,62 @@
+$CurrentScriptFileParentDir = Split-Path $PSScriptRoot -Leaf
+
+if($CurrentScriptFileParentDir -ne ".tasks") {
+    throw "All build scripts must be run from the '.tasks' directory. Current parent directory is '$CurrentScriptFileParentDir'. Please check your project structure and try again."
+}
+
 $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $ProjectName = Split-Path $ProjectRoot -Leaf
-$OutputDir = Join-Path $ProjectRoot "output"
-$BuildDir = Join-Path $OutputDir "build"
-$ReleaseDir = Join-Path $OutputDir "release"
-
-if(-not (Test-Path $OutputDir)) {
-    New-Item -ItemType Directory -Path $OutputDir | Out-Null
-}
-
-if(-not (Test-Path $BuildDir)) {
-    New-Item -ItemType Directory -Path $BuildDir | Out-Null
-}
-
-if(-not (Test-Path $ReleaseDir)) {
-    New-Item -ItemType Directory -Path $ReleaseDir | Out-Null
-}
 
 $global:__ProjectTasksEnvironment = @{
     ProjectRoot = $ProjectRoot
     ProjectName = $ProjectName
-    OutputDir = $OutputDir
-    BuildDir = $BuildDir
-    ReleaseDir = $ReleaseDir
-    IsInitialized = $true
+    
+    IsInitialized = $false
 }
 
-function Get-ProjectTasksEnvironmentProperty {
-    [CmdletBinding()]
+. (Join-Path $PSScriptRoot "cmdlets" "Get-ProjectEnvironmentPath.ps1")
+
+# Initialize the project tasks environment
+
+$BuildDirectories = @(
+    "build"
+    (Join-Path "build" "debug")
+    (Join-Path "build" "release")
+)
+
+$SourceDirectories = @(
+    "bin"
+    "src"
+    (Join-Path "src" "templates")
+    "scripts"
+    "lib"
+)
+
+$ResourceDirectories = @(
+    "resources"
+)
+
+$global:__ProjectTasksEnvironment += @{
+    BuildDebugDir = Get-ProjectEnvironmentPath "build" "debug"
+    BuildReleaseDir = Get-ProjectEnvironmentPath "build" "release"
     
-    param(
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("ProjectRoot", "ProjectName", "OutputDir", "BuildDir", "ReleaseDir", "IsInitialized")]
-        [string]$Name
-    )
-
-    if(-not $global:__ProjectTasksEnvironment.IsInitialized) {
-        throw "Project tasks environment is not initialized. Please run the initialization script first."
-        
-        return $null
-    }
-    
-    $Value = $global:__ProjectTasksEnvironment.$Name
-
-    if(-not $Value) {
-        throw "Property '$Name' does not exist in the project tasks environment."
-    }
-
-    return $Value
+    BuildDirectories = $BuildDirectories | ForEach-Object { Get-ProjectEnvironmentPath $_ }
+    SourceDirectories = $SourceDirectories | ForEach-Object { Get-ProjectEnvironmentPath $_ }
+    ResourceDirectories = $ResourceDirectories | ForEach-Object { Get-ProjectEnvironmentPath $_ }
 }
+
+$global:__ProjectTasksEnvironment += @{
+    RequiredDirectories = $global:__ProjectTasksEnvironment.BuildDirectories + $global:__ProjectTasksEnvironment.SourceDirectories + $global:__ProjectTasksEnvironment.ResourceDirectories
+}
+
+$global:__ProjectTasksEnvironment.RequiredDirectories | ForEach-Object {
+    if(-not (Test-Path $_)) {
+        New-Item -ItemType Directory -Path $_ -ErrorAction Stop | Out-Null
+    }
+}
+
+. (Join-Path $PSScriptRoot "cmdlets" "Test-ProjectTasksEnvironment.ps1")
+
+$global:__ProjectTasksEnvironment.IsInitialized = Test-ProjectTasksEnvironment
+
+. (Join-Path $PSScriptRoot "cmdlets" "Get-ProjectTasksEnvironmentProperty.ps1")
