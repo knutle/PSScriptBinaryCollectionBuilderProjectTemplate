@@ -2,10 +2,10 @@
 
 $ProjectName = Get-ProjectTasksEnvironmentProperty -Name ProjectName
 $BuildDebugDir = Get-ProjectTasksEnvironmentProperty -Name BuildDebugDir
-$ReleaseDir = Get-ProjectTasksEnvironmentProperty -Name ReleaseDir
+$BuildReleaseDir = Get-ProjectTasksEnvironmentProperty -Name BuildReleaseDir
 $ResourceDirs = Get-ProjectTasksEnvironmentProperty -Name ResourceDirectories
 
-$ArchivePaths = ($BuildDebugDir, $ResourceDirs) | ForEach-Object {
+$ArchivePaths = ((Join-Path $BuildDebugDir "bin"), $ResourceDirs) | ForEach-Object {
     if(-not (Test-Path $_)) {
         Write-Error "Build directory '$_' does not exist. Please run the build task first."
         exit 1
@@ -15,10 +15,10 @@ $ArchivePaths = ($BuildDebugDir, $ResourceDirs) | ForEach-Object {
 }
 
 $archiveName = "$ProjectName $(Get-Date -UFormat "%Y-%m-%d %H%M%S").zip"
-$archiveDestinationPath = "$(Join-Path $ReleaseDir $archiveName)"
+$archiveDestinationPath = "$(Join-Path $BuildReleaseDir $archiveName)"
 
-if(!(Test-Path $ReleaseDir)) {
-    New-Item $ReleaseDir -ItemType Directory -Force
+if(!(Test-Path $BuildReleaseDir)) {
+    New-Item $BuildReleaseDir -ItemType Directory -Force
 }
 
 Compress-Archive -Path $ArchivePaths -DestinationPath "$archiveDestinationPath"

@@ -1,22 +1,19 @@
 . (Join-Path $PSScriptRoot "clean.ps1")
 
-$ProjectRoot = Get-ProjectTasksEnvironmentProperty -Name ProjectRoot
 $BuildDebugDir = Get-ProjectTasksEnvironmentProperty -Name BuildDebugDir
-$SourcePaths = (Get-ProjectTasksEnvironmentProperty -Name SourceDirectories) + (Get-ProjectTasksEnvironmentProperty -Name ResourceDirectories)
+$BuildSourcePaths = (Get-ProjectTasksEnvironmentProperty -Name SourceDirectories) + (Get-ProjectTasksEnvironmentProperty -Name ResourceDirectories)
 
 Write-Host "Collect relevant source files to process during build" -ForegroundColor Yellow
 
-$SourcePaths | ForEach-Object {
-    $SourcePath = Join-Path $ProjectRoot $_
+$BuildSourcePaths | ForEach-Object {
+    Write-Host "Processing build source path '$_'" -ForegroundColor Cyan
 
-    Write-Host "Processing source path '$SourcePath'" -ForegroundColor Cyan
-
-    if(-not (Test-Path $SourcePath)) {
-        Write-Error "Source path '$SourcePath' does not exist. Please check your project structure."
+    if(-not (Test-Path $_)) {
+        Write-Error "Source path '$_' does not exist. Please check your project structure."
         exit 1
     }
 
-    Copy-Item -Path $SourcePath -Destination (Join-Path $BuildDebugDir $_) -Recurse
+    Copy-Item -Path $_ -Destination "$BuildDebugDir/" -Recurse
 }
 
 . (Join-Path $PSScriptRoot "shared" "make-autoloader.ps1")
