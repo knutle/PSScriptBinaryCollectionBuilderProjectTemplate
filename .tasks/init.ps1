@@ -59,4 +59,8 @@ $global:__ProjectTasksEnvironment.RequiredDirectories | ForEach-Object {
 
 $global:__ProjectTasksEnvironment.IsInitialized = Test-ProjectTasksEnvironment
 
+if(-not $global:__ProjectTasksEnvironment.IsInitialized) {
+    throw "Project tasks environment was de-initialized during validation."
+}
+
 . (Join-Path $PSScriptRoot "cmdlets" "Get-ProjectTasksEnvironmentProperty.ps1")
