@@ -2,7 +2,7 @@ $BuildDir = (Get-ProjectTasksEnvironmentProperty BuildDir)
 
 Write-Host "Generating self-contained autoloader" -ForegroundColor Yellow
 
-$AutoloaderPath = "$BuildDir\lib\_autoload_full.ps1"
+$AutoloaderPath = "$BuildDir\lib\_autoload.ps1"
 
 if(-not (Test-Path $AutoloaderPath)) {
     New-Item -ItemType File -Path $AutoloaderPath | Out-Null
