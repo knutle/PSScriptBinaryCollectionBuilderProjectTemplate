@@ -1,4 +1,3 @@
-. $PSScriptRoot/init.ps1
 . $PSScriptRoot/clean.ps1
 
 $ProjectRoot = Get-ProjectTasksEnvironmentProperty -Name ProjectRoot
