@@ -1,0 +1,1 @@
+. "$PSScriptRoot\_autoload.ps1" # BUILD:EMBED
