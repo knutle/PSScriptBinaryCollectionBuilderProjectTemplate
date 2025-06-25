@@ -11,6 +11,6 @@ if(!(Test-Path $ReleaseDir)) {
     New-Item $ReleaseDir -ItemType Directory -Force
 }
 
-Compress-Archive -Path "$BuildDir/*" -DestinationPath "$archiveDestinationPath"
+Compress-Archive -Path "$BuildDir/bin/*" -DestinationPath "$archiveDestinationPath"
 
 Start-Process explorer.exe -ArgumentList "/select,`"$archiveDestinationPath`""
